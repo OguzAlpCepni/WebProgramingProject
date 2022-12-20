@@ -1,10 +1,14 @@
+using Microsoft.EntityFrameworkCore;
 using WebProgramingProject.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>();
-
+builder.Services.AddDbContext<ApplicationDbContext>(opts =>
+{
+    opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //opts.UseLazyLoadingProxies();
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
