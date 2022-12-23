@@ -10,7 +10,7 @@ namespace WebProgramingProject.Data
 {
 		public class ApplicationDbContext : IdentityDbContext
 		{
-
+		// I Created Table for Entitys
 			public Microsoft.EntityFrameworkCore.DbSet<Category> Category { get; set; }
 			public Microsoft.EntityFrameworkCore.DbSet<Movie> Movie { get; set; }
 			public Microsoft.EntityFrameworkCore.DbSet<Person> Person { get; set; }
