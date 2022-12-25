@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,9 @@ using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Data
 {
-		public class ApplicationDbContext : IdentityDbContext
-		{
+		public class MovieDbContext : Microsoft.EntityFrameworkCore.DbContext
+    {
+		
 		// I Created Table for Entitys
 			public Microsoft.EntityFrameworkCore.DbSet<Category> Category { get; set; }
 			public Microsoft.EntityFrameworkCore.DbSet<Movie> Movie { get; set; }
@@ -17,7 +18,8 @@ namespace WebProgramingProject.Data
 			public Microsoft.EntityFrameworkCore.DbSet<Review> Review { get; set; }
 			public Microsoft.EntityFrameworkCore.DbSet<MovieCategory> MovieCategory { get; set; }
 			public Microsoft.EntityFrameworkCore.DbSet<MoviePerson> MoviePerson { get; set; }
-			public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+
+            public MovieDbContext(DbContextOptions<MovieDbContext> options)
 				: base(options)
 			{
 			}

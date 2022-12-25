@@ -14,9 +14,9 @@ namespace WebProgramingProject.Controllers
     public class PeopleController : Controller
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly MovieDbContext _context;
 
-        public PeopleController(ApplicationDbContext context)
+        public PeopleController(MovieDbContext context)
         {
             _context = context;
         }

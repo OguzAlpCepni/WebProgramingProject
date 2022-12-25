@@ -14,9 +14,9 @@ namespace WebProgramingProject.Controllers
     [Authorize(Roles = "Administrator, PowerUser")]
     public class MoviesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MovieDbContext _context;
 
-        public MoviesController(ApplicationDbContext context)
+        public MoviesController(MovieDbContext context)
         {
             _context = context;
         }

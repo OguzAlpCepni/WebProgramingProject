@@ -12,9 +12,9 @@ namespace WebProgramingProject.Controllers
 {
     public class MovieCategoriesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MovieDbContext _context;
 
-        public MovieCategoriesController(ApplicationDbContext context)
+        public MovieCategoriesController(MovieDbContext context)
         {
             _context = context;
         }
