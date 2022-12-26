@@ -38,7 +38,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 app.UseAuthentication();
 app.MapRazorPages();
-
+IdentitySeed.Initialize(app.Services);
 
 
 // Configure the HTTP request pipeline.
@@ -53,9 +53,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
