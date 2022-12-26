@@ -27,8 +27,9 @@ builder.Services.AddIdentity<MovieUser,AppRole>(options=>
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireDigit = false;
-}).AddEntityFrameworkStores<MovieDbContext>().AddDefaultUI()
+}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI()
 .AddTokenProvider<DataProtectorTokenProvider<MovieUser>>(TokenOptions.DefaultProvider);
+
 
 builder.Services.AddControllersWithViews();
 // Add services to the container.

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
 using WebProgramingProject.Models;
+
 
 namespace WebProgramingProject.Data
 {
@@ -8,8 +8,7 @@ namespace WebProgramingProject.Data
     {
         public static async Task InitializeUsersAsync(UserManager<MovieUser> userManager, RoleManager<AppRole> roleManager)
         {
-            var defaultUsers = new MovieUser[] {
-                new MovieUser
+            var defaultUsers = new MovieUser[] { new MovieUser
                 {
                     UserName = "Oguz Alp",
                     Email = "g201210035@sakarya.edu.tr",
