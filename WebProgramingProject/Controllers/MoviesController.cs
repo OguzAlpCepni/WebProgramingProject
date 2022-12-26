@@ -11,7 +11,7 @@ using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    [Authorize(Roles = "Administrator, PowerUser")]
+    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
     public class MoviesController : Controller
     {
         private readonly MovieDbContext _context;

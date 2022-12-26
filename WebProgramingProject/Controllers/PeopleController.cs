@@ -11,6 +11,7 @@ using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
+    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
     public class PeopleController : Controller
     {
 

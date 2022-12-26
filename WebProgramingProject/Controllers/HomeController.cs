@@ -5,7 +5,7 @@ using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
