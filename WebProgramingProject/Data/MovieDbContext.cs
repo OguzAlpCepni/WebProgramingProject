@@ -1,9 +1,5 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Text;
 using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Data
