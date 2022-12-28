@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing.Text;
 using WebProgramingProject.Models;
 
 
@@ -6,64 +9,85 @@ namespace WebProgramingProject.Data
 {
     public class IdentitySeed
     {
-        public static async Task InitializeUsersAsync(UserManager<MovieUser> userManager, RoleManager<AppRole> roleManager)
+        
+
+        public void InitializeUsersAsync()
         {
-            var defaultUsers = new MovieUser[] { new MovieUser
+
+            var defaultUsers = new MovieUser[] {
+                new MovieUser
                 {
-                    UserName = "Oguz Alp",
+                    UserName = "g211210380@sakarya.edu.tr",
+                    Email = "g211210380@sakarya.edu.tr",
+                    Name = "Mustafa",
+                    Surname = "Bebek",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                },
+                new MovieUser
+                {
+                    UserName = "g201210035@sakarya.edu.tr",
                     Email = "g201210035@sakarya.edu.tr",
                     Name = "Oguz alp",
                     Surname = "Cepni",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                 },
-                new MovieUser
-                {
-                    UserName = "Mustafa",
-                    Email = "g211210380@sakarya.edu.tr",
-                    Name = "Mustafa",
-                    Surname = "Bebek",
-                    EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
-                }
             };
+            
+
             foreach (var defaultUser in defaultUsers)
             {
-                var user = await userManager.FindByEmailAsync(defaultUser.Email);
+                var user = this.userManager.FindByEmailAsync(defaultUser.Email).Result;
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "123");
-                    await userManager.AddToRoleAsync(defaultUser, Enums.Roles.Customer.ToString());
-                    await userManager.AddToRoleAsync(defaultUser, Enums.Roles.Employee.ToString());
-                    await userManager.AddToRoleAsync(defaultUser, Enums.Roles.Admin.ToString());
-                    await userManager.AddToRoleAsync(defaultUser, Enums.Roles.SuperAdmin.ToString());
+                    _userStore.SetUserNameAsync(defaultUser, defaultUser.UserName, CancellationToken.None).Wait();
+                    _emailStore.SetEmailAsync(defaultUser, defaultUser.Email, CancellationToken.None).Wait(); 
+
+                    var t = userManager.CreateAsync(defaultUser, "sau").Result;
+
+                    user = this.userManager.FindByEmailAsync(defaultUser.Email).Result;
+                    if (user == null)
+                        continue;
+                    this.userManager.AddToRoleAsync(user, Enums.Roles.Customer.ToString()).Wait();
+                    this.userManager.AddToRoleAsync(user, Enums.Roles.Employee.ToString()).Wait();
+                    this.userManager.AddToRoleAsync(user, Enums.Roles.Admin.ToString()).Wait();
+                    this.userManager.AddToRoleAsync(user, Enums.Roles.SuperAdmin.ToString()).Wait();
                 }
             }
 
         }
-        public static async Task InitializeRolesAsync(UserManager<MovieUser> userManager, RoleManager<AppRole> roleManager)
+        public void InitializeRolesAsync()
         {
-            if (roleManager.Roles.Count() == 0)
+            if (this.roleManager.Roles.Count() == 0)
             {
-                await roleManager.CreateAsync(new AppRole(Enums.Roles.SuperAdmin.ToString()));
-                await roleManager.CreateAsync(new AppRole(Enums.Roles.Admin.ToString()));
-                await roleManager.CreateAsync(new AppRole(Enums.Roles.Employee.ToString()));
-                await roleManager.CreateAsync(new AppRole(Enums.Roles.Customer.ToString()));
+                this.roleManager.CreateAsync(new AppRole(Enums.Roles.SuperAdmin.ToString())).Wait();
+                this.roleManager.CreateAsync(new AppRole(Enums.Roles.Admin.ToString())).Wait();
+                this.roleManager.CreateAsync(new AppRole(Enums.Roles.Employee.ToString())).Wait();
+                this.roleManager.CreateAsync(new AppRole(Enums.Roles.Customer.ToString())).Wait();
             }
         }
-        internal async static void Initialize(IServiceProvider applicationServices)
+        public void Initialize()
         {
-            using (var scope = applicationServices.CreateScope())
-            {
-                var provider = scope.ServiceProvider;
-                var context = provider.GetRequiredService<MovieDbContext>();
-                var userManager = provider.GetRequiredService<UserManager<MovieUser>>();
-                var roleManager = provider.GetRequiredService<RoleManager<AppRole>>();
+            // automigration 
+            this.InitializeRolesAsync();
+            this.InitializeUsersAsync();
+        }
 
-                // automigration 
-                await InitializeRolesAsync(userManager, roleManager);
-                await InitializeUsersAsync(userManager, roleManager);
-            }
+
+        private RoleManager<AppRole> roleManager;
+        private UserManager<MovieUser> userManager;
+        private readonly IUserStore<MovieUser> _userStore;
+        private readonly IUserEmailStore<MovieUser> _emailStore;
+        public IdentitySeed(RoleManager<AppRole> roleManager, UserManager<MovieUser> userManager, IUserStore<MovieUser> _userStore)
+        {
+            this.roleManager = roleManager;
+            this.userManager = userManager;
+            this._emailStore = (IUserEmailStore<MovieUser>)_userStore;
+            this._userStore = _userStore;
         }
+        
+
+
     }
 }

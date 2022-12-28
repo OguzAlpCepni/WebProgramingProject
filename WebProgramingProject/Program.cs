@@ -27,18 +27,21 @@ builder.Services.AddIdentity<MovieUser,AppRole>(options=>
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireDigit = false;
+    options.Lockout.AllowedForNewUsers = false;
 }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI()
 .AddTokenProvider<DataProtectorTokenProvider<MovieUser>>(TokenOptions.DefaultProvider);
 
 
 builder.Services.AddControllersWithViews();
 // Add services to the container.
+builder.Services.AddScoped<IdentitySeed>();
 
 
 var app = builder.Build();
+
 app.UseAuthentication();
 app.MapRazorPages();
-IdentitySeed.Initialize(app.Services);
+
 
 
 // Configure the HTTP request pipeline.
@@ -50,16 +53,23 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
 
 app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IdentitySeed>();
+    dbInitializer.Initialize();
+}
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
