@@ -2,20 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProgramingProject.Data;
-using WebProgramingProject.Enums;
 using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
     public class ReviewsController : Controller
     {
-        
         private readonly MovieDbContext _context;
 
         public ReviewsController(MovieDbContext context)
@@ -26,7 +22,8 @@ namespace WebProgramingProject.Controllers
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Review.ToListAsync());
+            var movieDbContext = _context.Review.Include(r => r.Movie);
+            return View(await movieDbContext.ToListAsync());
         }
 
         // GET: Reviews/Details/5
@@ -38,6 +35,7 @@ namespace WebProgramingProject.Controllers
             }
 
             var review = await _context.Review
+                .Include(r => r.Movie)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
@@ -50,6 +48,7 @@ namespace WebProgramingProject.Controllers
         // GET: Reviews/Create
         public IActionResult Create()
         {
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain");
             return View();
         }
 
@@ -58,7 +57,7 @@ namespace WebProgramingProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Rating,Comment,Id")] Review review)
+        public async Task<IActionResult> Create([Bind("MovieUserId,MovieId,Rating,Comment,Id")] Review review)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +65,7 @@ namespace WebProgramingProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", review.MovieId);
             return View(review);
         }
 
@@ -82,6 +82,7 @@ namespace WebProgramingProject.Controllers
             {
                 return NotFound();
             }
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", review.MovieId);
             return View(review);
         }
 
@@ -90,7 +91,7 @@ namespace WebProgramingProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Rating,Comment,Id")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("MovieUserId,MovieId,Rating,Comment,Id")] Review review)
         {
             if (id != review.Id)
             {
@@ -117,6 +118,7 @@ namespace WebProgramingProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", review.MovieId);
             return View(review);
         }
 
@@ -129,6 +131,7 @@ namespace WebProgramingProject.Controllers
             }
 
             var review = await _context.Review
+                .Include(r => r.Movie)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
@@ -145,21 +148,21 @@ namespace WebProgramingProject.Controllers
         {
             if (_context.Review == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Review'  is null.");
+                return Problem("Entity set 'MovieDbContext.Review'  is null.");
             }
             var review = await _context.Review.FindAsync(id);
             if (review != null)
             {
                 _context.Review.Remove(review);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ReviewExists(int id)
         {
-            return _context.Review.Any(e => e.Id == id);
+          return _context.Review.Any(e => e.Id == id);
         }
     }
 }

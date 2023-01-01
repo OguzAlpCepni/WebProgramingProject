@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProgramingProject.Data;
-using WebProgramingProject.Enums;
 using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
     public class MovieCategoriesController : Controller
     {
         private readonly MovieDbContext _context;
@@ -25,7 +22,8 @@ namespace WebProgramingProject.Controllers
         // GET: MovieCategories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.MovieCategory.ToListAsync());
+            var movieDbContext = _context.MovieCategory.Include(m => m.Category).Include(m => m.Movie);
+            return View(await movieDbContext.ToListAsync());
         }
 
         // GET: MovieCategories/Details/5
@@ -37,6 +35,8 @@ namespace WebProgramingProject.Controllers
             }
 
             var movieCategory = await _context.MovieCategory
+                .Include(m => m.Category)
+                .Include(m => m.Movie)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movieCategory == null)
             {
@@ -49,6 +49,8 @@ namespace WebProgramingProject.Controllers
         // GET: MovieCategories/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id");
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain");
             return View();
         }
 
@@ -57,7 +59,7 @@ namespace WebProgramingProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] MovieCategory movieCategory)
+        public async Task<IActionResult> Create([Bind("MovieId,CategoryId,Id")] MovieCategory movieCategory)
         {
             if (ModelState.IsValid)
             {
@@ -65,6 +67,8 @@ namespace WebProgramingProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", movieCategory.CategoryId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", movieCategory.MovieId);
             return View(movieCategory);
         }
 
@@ -81,6 +85,8 @@ namespace WebProgramingProject.Controllers
             {
                 return NotFound();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", movieCategory.CategoryId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", movieCategory.MovieId);
             return View(movieCategory);
         }
 
@@ -89,7 +95,7 @@ namespace WebProgramingProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] MovieCategory movieCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("MovieId,CategoryId,Id")] MovieCategory movieCategory)
         {
             if (id != movieCategory.Id)
             {
@@ -116,6 +122,8 @@ namespace WebProgramingProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", movieCategory.CategoryId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", movieCategory.MovieId);
             return View(movieCategory);
         }
 
@@ -128,6 +136,8 @@ namespace WebProgramingProject.Controllers
             }
 
             var movieCategory = await _context.MovieCategory
+                .Include(m => m.Category)
+                .Include(m => m.Movie)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movieCategory == null)
             {
@@ -144,7 +154,7 @@ namespace WebProgramingProject.Controllers
         {
             if (_context.MovieCategory == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.MovieCategory'  is null.");
+                return Problem("Entity set 'MovieDbContext.MovieCategory'  is null.");
             }
             var movieCategory = await _context.MovieCategory.FindAsync(id);
             if (movieCategory != null)

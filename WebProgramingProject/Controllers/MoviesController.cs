@@ -51,7 +51,10 @@ namespace WebProgramingProject.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie.Include(x => x.Reviews).Include(x => x.Categories).Include(x=>x.Persons)
+            var movie = await _context.Movie
+                .Include(x => x.Reviews).ThenInclude(mp => mp.MovieUser)
+                .Include(x => x.Categories).ThenInclude(mp => mp.Category)
+                .Include(x => x.Persons).ThenInclude(mp => mp.Person)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {

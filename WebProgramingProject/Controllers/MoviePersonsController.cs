@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProgramingProject.Data;
-using WebProgramingProject.Enums;
 using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
     public class MoviePersonsController : Controller
     {
         private readonly MovieDbContext _context;
@@ -25,7 +22,8 @@ namespace WebProgramingProject.Controllers
         // GET: MoviePersons
         public async Task<IActionResult> Index()
         {
-            return View(await _context.MoviePerson.ToListAsync());
+            var movieDbContext = _context.MoviePerson.Include(m => m.Movie).Include(m => m.Person);
+            return View(await movieDbContext.ToListAsync());
         }
 
         // GET: MoviePersons/Details/5
@@ -37,6 +35,8 @@ namespace WebProgramingProject.Controllers
             }
 
             var moviePerson = await _context.MoviePerson
+                .Include(m => m.Movie)
+                .Include(m => m.Person)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (moviePerson == null)
             {
@@ -49,6 +49,8 @@ namespace WebProgramingProject.Controllers
         // GET: MoviePersons/Create
         public IActionResult Create()
         {
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain");
+            ViewData["PersonId"] = new SelectList(_context.Person, "Id", "Id");
             return View();
         }
 
@@ -57,7 +59,7 @@ namespace WebProgramingProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Role,Id")] MoviePerson moviePerson)
+        public async Task<IActionResult> Create([Bind("MovieId,PersonId,Role,Id")] MoviePerson moviePerson)
         {
             if (ModelState.IsValid)
             {
@@ -65,6 +67,8 @@ namespace WebProgramingProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", moviePerson.MovieId);
+            ViewData["PersonId"] = new SelectList(_context.Person, "Id", "Id", moviePerson.PersonId);
             return View(moviePerson);
         }
 
@@ -81,6 +85,8 @@ namespace WebProgramingProject.Controllers
             {
                 return NotFound();
             }
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", moviePerson.MovieId);
+            ViewData["PersonId"] = new SelectList(_context.Person, "Id", "Id", moviePerson.PersonId);
             return View(moviePerson);
         }
 
@@ -89,7 +95,7 @@ namespace WebProgramingProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Role,Id")] MoviePerson moviePerson)
+        public async Task<IActionResult> Edit(int id, [Bind("MovieId,PersonId,Role,Id")] MoviePerson moviePerson)
         {
             if (id != moviePerson.Id)
             {
@@ -116,6 +122,8 @@ namespace WebProgramingProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Explain", moviePerson.MovieId);
+            ViewData["PersonId"] = new SelectList(_context.Person, "Id", "Id", moviePerson.PersonId);
             return View(moviePerson);
         }
 
@@ -128,6 +136,8 @@ namespace WebProgramingProject.Controllers
             }
 
             var moviePerson = await _context.MoviePerson
+                .Include(m => m.Movie)
+                .Include(m => m.Person)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (moviePerson == null)
             {
@@ -144,7 +154,7 @@ namespace WebProgramingProject.Controllers
         {
             if (_context.MoviePerson == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.MoviePerson'  is null.");
+                return Problem("Entity set 'MovieDbContext.MoviePerson'  is null.");
             }
             var moviePerson = await _context.MoviePerson.FindAsync(id);
             if (moviePerson != null)

@@ -24,9 +24,9 @@ namespace WebProgramingProject.Controllers
         {
             int movieCount = _context.Movie.Count();
 
-            var totalmovie = _context.Movie.Include(x => x.Categories).ToList();
-            var slidermovie = _context.Movie.Take(5).Include(x => x.Categories).ToList();
-            var trendmovie = _context.Movie.Take(5).Include(x => x.Categories).ToList();
+            var totalmovie = _context.Movie.Include(x => x.Categories).ThenInclude(mp => mp.Category).ToList();
+            var slidermovie = _context.Movie.Take(5).Include(x => x.Categories).ThenInclude(mp => mp.Category).ToList();
+            var trendmovie = _context.Movie.Take(5).Include(x => x.Categories).ThenInclude(mp => mp.Category).ToList();
 
             HomeViewModel homeview = new HomeViewModel(totalmovie, trendmovie, slidermovie, "Yeni Çıkanlar");
             return View(homeview);

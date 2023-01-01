@@ -37,7 +37,7 @@
                                         <li><span>@Localizer["Category"]:</span> 
                                         @foreach (var category in Model.Categories)
                                         {
-                                            <span>@category.Name</span>
+                                                <span>@category.Category.Name</span>
                                         }</li>
                                     </ul>
                                 </div>
@@ -63,7 +63,6 @@
                         
                     <div class="anime__review__item">
                             <div class="anime__review__item__text">
-                                <h6>@review.user.Name</h6>
                                 <p>
                                     @review.Comment
                                 </p>
@@ -72,7 +71,7 @@
                             </div>
 
                             <div>
-                                <h6 style="color:white">Puan: @review.rating<span></span></h6>
+                                <h6 style="color:white">Puan: @review.Rating<span></span></h6>
                             </div>
                             <div class="thumbnail">
                                 <a href="">Delete</a>

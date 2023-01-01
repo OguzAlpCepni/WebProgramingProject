@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebProgramingProject.Data;
 
@@ -11,9 +12,11 @@ using WebProgramingProject.Data;
 namespace WebProgramingProject.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230101190352_review-typo")]
+    partial class reviewtypo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,20 +219,20 @@ namespace WebProgramingProject.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MovieUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MovieUserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<double>("Rating")
                         .HasColumnType("float");
+
+                    b.Property<int>("ReviewerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewerId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MovieId");
 
-                    b.HasIndex("MovieUserId1");
+                    b.HasIndex("ReviewerId1");
 
                     b.ToTable("Review");
                 });
@@ -287,13 +290,13 @@ namespace WebProgramingProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebProgramingProject.Models.MovieUser", "MovieUser")
+                    b.HasOne("WebProgramingProject.Models.MovieUser", "Reviewer")
                         .WithMany()
-                        .HasForeignKey("MovieUserId1");
+                        .HasForeignKey("ReviewerId1");
 
                     b.Navigation("Movie");
 
-                    b.Navigation("MovieUser");
+                    b.Navigation("Reviewer");
                 });
 
             modelBuilder.Entity("WebProgramingProject.Models.Category", b =>

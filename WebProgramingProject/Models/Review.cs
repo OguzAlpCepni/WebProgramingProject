@@ -5,9 +5,11 @@ namespace WebProgramingProject.Models
 {
     public class Review:BaseModel
     {
+        public int MovieUserId { get; set; }
         [Display(Name = "kisi")]
-        public Person Person { get; set; }
+        public MovieUser MovieUser { get; set; }
 
+        public int MovieId { get; set; }
         [Display(Name = "movie")]
         public Movie Movie { get; set; }
         

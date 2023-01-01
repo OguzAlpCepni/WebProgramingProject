@@ -13,6 +13,12 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.MovieUserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Rating)
             </th>
             <th>
@@ -24,6 +30,12 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MovieUserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Movie.Explain)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>

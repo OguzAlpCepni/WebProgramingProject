@@ -21,7 +21,7 @@
                                     <div class="label">
                                         @foreach (var category in item.Categories)
                                         {
-                                            <span>@category.Name</span>
+                                            <span>@category.Category.Name</span>
                                         }
                                     </div>
                                     <h2></h2>
@@ -69,7 +69,7 @@
                                                 <li>
                                                     @foreach (var category in item.Categories)
                                                     {
-                                                        <span>@category.Name</span>
+                                                        <span>@category.Category.Name</span>
                                                     }
                                                 </li>
                                             </ul>
@@ -109,7 +109,7 @@
                                                 <li>
                                                     @foreach (var category in item.Categories)
                                                     {
-                                                        <span>@category.Name</span>
+                                                        <span>@category.Category.Name</span>
                                                     }
                                                 </li>
                                             </ul>

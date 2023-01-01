@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebProgramingProject.Data;
 
@@ -11,9 +12,11 @@ using WebProgramingProject.Data;
 namespace WebProgramingProject.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230101184616_fix relation")]
+    partial class fixrelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,64 +122,6 @@ namespace WebProgramingProject.Migrations
                     b.ToTable("MoviePerson");
                 });
 
-            modelBuilder.Entity("WebProgramingProject.Models.MovieUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("WebProgramingProject.Models.Person", b =>
                 {
                     b.Property<int>("Id")
@@ -213,14 +158,11 @@ namespace WebProgramingProject.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MovieId")
+                    b.Property<int?>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MovieUserId")
+                    b.Property<int?>("PersonId")
                         .HasColumnType("int");
-
-                    b.Property<string>("MovieUserId1")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
@@ -229,7 +171,7 @@ namespace WebProgramingProject.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.HasIndex("MovieUserId1");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Review");
                 });
@@ -283,17 +225,15 @@ namespace WebProgramingProject.Migrations
                 {
                     b.HasOne("WebProgramingProject.Models.Movie", "Movie")
                         .WithMany("Reviews")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MovieId");
 
-                    b.HasOne("WebProgramingProject.Models.MovieUser", "MovieUser")
+                    b.HasOne("WebProgramingProject.Models.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("MovieUserId1");
+                        .HasForeignKey("PersonId");
 
                     b.Navigation("Movie");
 
-                    b.Navigation("MovieUser");
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("WebProgramingProject.Models.Category", b =>
