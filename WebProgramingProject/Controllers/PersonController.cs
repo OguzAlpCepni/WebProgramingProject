@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,25 +10,22 @@ using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
-    public class PeopleController : Controller
+    public class PersonController : Controller
     {
-
         private readonly MovieDbContext _context;
 
-        public PeopleController(MovieDbContext context)
+        public PersonController(MovieDbContext context)
         {
             _context = context;
         }
 
-        // GET: People
-
+        // GET: Person
         public async Task<IActionResult> Index()
         {
             return View(await _context.Person.ToListAsync());
         }
 
-        // GET: People/Details/5
+        // GET: Person/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Person == null)
@@ -47,13 +43,13 @@ namespace WebProgramingProject.Controllers
             return View(person);
         }
 
-        // GET: People/Create
+        // GET: Person/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: People/Create
+        // POST: Person/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -69,7 +65,7 @@ namespace WebProgramingProject.Controllers
             return View(person);
         }
 
-        // GET: People/Edit/5
+        // GET: Person/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Person == null)
@@ -85,7 +81,7 @@ namespace WebProgramingProject.Controllers
             return View(person);
         }
 
-        // POST: People/Edit/5
+        // POST: Person/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -120,7 +116,7 @@ namespace WebProgramingProject.Controllers
             return View(person);
         }
 
-        // GET: People/Delete/5
+        // GET: Person/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Person == null)
@@ -138,14 +134,14 @@ namespace WebProgramingProject.Controllers
             return View(person);
         }
 
-        // POST: People/Delete/5
+        // POST: Person/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Person == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Person'  is null.");
+                return Problem("Entity set 'MovieDbContext.Person'  is null.");
             }
             var person = await _context.Person.FindAsync(id);
             if (person != null)

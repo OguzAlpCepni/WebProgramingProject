@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using WebProgramingProject.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,18 @@ builder.Services.AddIdentity<MovieUser,AppRole>(options=>
 }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI()
 .AddTokenProvider<DataProtectorTokenProvider<MovieUser>>(TokenOptions.DefaultProvider);
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddMvc()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "tr-TR", "en-US" };
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
 
 builder.Services.AddControllersWithViews();
 // Add services to the container.
@@ -42,7 +55,12 @@ var app = builder.Build();
 app.UseAuthentication();
 app.MapRazorPages();
 
+var supportedCultures = new[] { "tr-TR", "en-US" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture("tr-TR")
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

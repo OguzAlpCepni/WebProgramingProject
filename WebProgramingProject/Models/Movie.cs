@@ -9,8 +9,16 @@ namespace WebProgramingProject.Models
         public string MovieName { get; set; }
         [Required]
         public string Explain { get; set; }
-        [Display(Name = "category")]
-        public Category Category { get; set; }
+        
+        
+        [Display(Name = "Slider Fotoğraf Adresi")]
+        public string SliderPhotoURL { get; set; }
 
+        [Display(Name = "Detay Fotoğraf Adresi")]
+        public string DetailPhotoURL { get; set; }
+
+        public ICollection<Category> Categories { get; set;}
+        public ICollection<Review> Reviews { get; set;}
+        public ICollection<MoviePerson> Persons { get; set;}
     }
 }

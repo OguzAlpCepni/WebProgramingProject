@@ -22,6 +22,16 @@
                 <input asp-for="Explain" class="form-control" />
                 <span asp-validation-for="Explain" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="SliderPhotoURL" class="control-label"></label>
+                <input asp-for="SliderPhotoURL" class="form-control" />
+                <span asp-validation-for="SliderPhotoURL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DetailPhotoURL" class="control-label"></label>
+                <input asp-for="DetailPhotoURL" class="form-control" />
+                <span asp-validation-for="DetailPhotoURL" class="text-danger"></span>
+            </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -34,6 +44,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

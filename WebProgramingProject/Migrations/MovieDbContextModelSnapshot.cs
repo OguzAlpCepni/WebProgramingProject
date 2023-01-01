@@ -22,6 +22,21 @@ namespace WebProgramingProject.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CategoryMovie", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MoviesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoriesId", "MoviesId");
+
+                    b.HasIndex("MoviesId");
+
+                    b.ToTable("CategoryMovie");
+                });
+
             modelBuilder.Entity("WebProgramingProject.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -46,8 +61,8 @@ namespace WebProgramingProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<string>("DetailPhotoURL")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Explain")
                         .IsRequired()
@@ -57,9 +72,10 @@ namespace WebProgramingProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("SliderPhotoURL")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("CategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Movie");
                 });
@@ -167,13 +183,19 @@ namespace WebProgramingProject.Migrations
                     b.ToTable("Review");
                 });
 
-            modelBuilder.Entity("WebProgramingProject.Models.Movie", b =>
+            modelBuilder.Entity("CategoryMovie", b =>
                 {
-                    b.HasOne("WebProgramingProject.Models.Category", "Category")
+                    b.HasOne("WebProgramingProject.Models.Category", null)
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Category");
+                    b.HasOne("WebProgramingProject.Models.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WebProgramingProject.Models.MovieCategory", b =>

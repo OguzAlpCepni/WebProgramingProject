@@ -1,8 +1,127 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model WebProgramingProject.Models.HomeViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<CommonResources> SharedLocalizer
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+
+<section class="hero">
+    <div class="container">
+        <div class="hero__slider owl-carousel">
+            @{
+                foreach (var item in Model._SliderMovie)
+                {
+                    <div class="hero__items set-bg" data-setbg="@item.SliderPhotoURL">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="hero__text">
+                                    <div class="label">
+                                        @foreach (var category in item.Categories)
+                                        {
+                                            <span>@category.Name</span>
+                                        }
+                                    </div>
+                                    <h2></h2>
+                                    <h2>@item.MovieName</h2>
+                                    <a asp-controller="Movies" asp-action="Showcase" asp-route-id="@item.Id"><span>Şimdi İncele</span> <i class="fa fa-angle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Hero Section End -->
+<!-- Product Section Begin -->
+
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="trending__product">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="section-title">
+                                <h4>@Localizer["NewMovie"]</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        @{
+                            foreach (var item in Model._TotalMovie)
+                            {
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="@item.DetailPhotoURL">
+                                            
+                                           
+                                            
+                                        </div>
+                                        <div class="product__item__text">
+                                            <ul>
+                                                <li>
+                                                    @foreach (var category in item.Categories)
+                                                    {
+                                                        <span>@category.Name</span>
+                                                    }
+                                                </li>
+                                            </ul>
+                                            <h5><a asp-controller="Movies" asp-action="Showcase" asp-route-id="@item.Id">@item.MovieName</a></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-1">
+            </div>
+
+            <div class="col-lg-3">
+                <div class="trending__product">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="section-title">
+                                <h4>@Localizer["TrendMovie"]</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        @{
+                            foreach (var item in Model._TrendMovie)
+                            {
+                                <div class="col-lg-12">
+                                    <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="@item.DetailPhotoURL">
+                                        </div>
+                                        <div class="product__item__text">
+                                            <ul>
+                                                <li>
+                                                    @foreach (var category in item.Categories)
+                                                    {
+                                                        <span>@category.Name</span>
+                                                    }
+                                                </li>
+                                            </ul>
+                                            <h5><a asp-controller="Movies" asp-action="Showcase" asp-route-id="@item.Id">@item.MovieName</a></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
