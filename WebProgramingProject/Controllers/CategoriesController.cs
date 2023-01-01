@@ -12,7 +12,7 @@ using WebProgramingProject.Models;
 
 namespace WebProgramingProject.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class CategoriesController : Controller
     {
         private readonly MovieDbContext _context;
